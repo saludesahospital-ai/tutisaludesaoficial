@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TUTI SALUDESA</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+body{
+background:#f5f7fa;
+font-family:'Segoe UI',sans-serif;
+}
+
+.hero{
+background:linear-gradient(135deg,#0d6efd,#198754);
+color:white;
+padding:80px 20px;
+text-align:center;
+}
+
+.card-product{
+transition:.3s;
+height:100%;
+}
+
+.card-product:hover{
+transform:translateY(-5px);
+box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+.product-img{
+height:220px;
+object-fit:cover;
+}
+
+.cart-badge{
+background:red;
+color:white;
+padding:2px 8px;
+border-radius:50%;
+font-size:12px;
+}
+
+.sticky-top{
+z-index:1000;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+
+<div class="container">
+
+<a class="navbar-brand fw-bold" href="#">
+🛒 TUTI SALUDESA
+</a>
+
+<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="menu">
+
+<ul class="navbar-nav ms-auto">
+
+<li class="nav-item">
+<a class="nav-link" href="#productos">Productos</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="#carrito">
+Carrito
+<span id="cartCount" class="cart-badge">0</span>
+</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</nav>
+
+<section class="hero">
+
+<div class="container">
+
+<h1 class="display-4 fw-bold">
+TUTI SALUDESA
+</h1>
+
+<p class="lead">
+Víveres, Ropa y Electrodomésticos al mejor precio.
+</p>
+
+<a href="#productos" class="btn btn-light btn-lg">
+Comprar Ahora
+</a>
+
+</div>
+
+</section>
+
+<div class="container mt-5">
+
+<div class="row mb-4">
+
+<div class="col-md-8">
+
+<input
+type="text"
+id="search"
+class="form-control"
+placeholder="Buscar productos...">
+
+</div>
+
+<div class="col-md-4">
+
+<select id="filter" class="form-select">
+
+<option value="todos">Todas las categorías</option>
+<option value="Víveres">Víveres</option>
+<option value="Ropa">Ropa</option>
+<option value="Electrodomésticos">Electrodomésticos</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div id="productos" class="row"></div>
+
+</div>
+
+<div class="container mt-5" id="carrito">
+
+<h2>Carrito de Compras</h2>
+
+<div id="cartItems"></div>
+
+<div class="card p-4 mt-3">
+
+<h4>
+Total:
+$<span id="total">0.00</span>
+</h4>
+
+<input
+id="nombre"
+class="form-control mt-3"
+placeholder="Nombre Completo">
+
+<input
+id="cedula"
+class="form-control mt-2"
+placeholder="Número de Cédula">
+
+<button
+id="btnWhatsapp"
+class="btn btn-success mt-3"
+disabled>
+
+Finalizar Pedido por WhatsApp
+
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+const productos=[
+
+{
+id:1,
+nombre:"ARROZ PRIMICIAS",
+categoria:"Víveres",
+precio:15.57,
+imagen:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600"
+},
+
+{
+id:2,
+nombre:"ACEITE COCINERO 3L",
+categoria:"Víveres",
+precio:8.88,
+imagen:"https://grupodanec.com.ec/wp-content/uploads/2024/08/Cocinero-3-litros-B.png"
+},
+
+{
+id:3,
+nombre:"CAFÉ ORO",
+categoria:"Víveres",
+precio:5.00,
+imagen:"https://hosteleriaecuador.com/wp-content/uploads/SOLUBLES-2.webp"
+},
+
+{
+id:4,
+nombre:"ATÚN REAL",
+categoria:"Víveres",
+precio:8.86,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2025/11/90388000792-1-26.jpg"
+},
+
+{
+id:5,
+nombre:"TV 65 PULGADAS",
+categoria:"Electrodomésticos",
+precio:682.20,
+stock:5,
+imagen:"https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=600"
+},
+
+{
+id:6,
+nombre:"FREIDORA DE AIRE",
+categoria:"Electrodomésticos",
+precio:91.15,
+stock:5,
+imagen:"https://pub-ce468fb1221b4cf38f600378b8854a10.r2.dev/2026/05/810072408488-1-5.png"
+},
+
+{
+id:7,
+nombre:"CAMISA ECUADOR DE HOMBRE TALLA L",
+categoria:"Ropa",
+precio:27.90,
+stock:1,
+imagen:"https://www.zizi-ecuador.com/cdn/shop/files/ChatGPTImage19feb2026_18_18_00.png?v=1771603545&width=823"
+},
+
+{
+id:8,
+nombre:"BRASIER NEGRO 36B",
+categoria:"Ropa",
+precio:22.90,
+stock:1,
+imagen:"https://haby.com.co/cdn/shop/files/11505-negro-v10.jpg?v=1774913077"
+},
+
+{
+id:9,
+nombre:"CONJUNTO ROSA BRASIER + INTERIOR",
+categoria:"Ropa",
+precio:23.00,
+imagen:"https://lilipinkco.vtexassets.com/arquivos/ids/479607-800-auto?v=639138518581770000&width=800&height=auto&aspect=true"
+},
+
+{
+id:10,
+nombre:"TRAJE DE BAÑO DORADO",
+categoria:"Ropa",
+precio:20.00,
+imagen:"https://m.media-amazon.com/images/I/613Xf0eQHKL._AC_UY1000_.jpg"
+},
+
+{
+id:11,
+nombre:"AVENA 1KG",
+categoria:"Víveres",
+precio:2.20,
+imagen:"https://www.recetasnestle.com.ec/sites/default/files/2022-04/avena.jpg_0.jpg"
+},
+
+{
+id:12,
+nombre:"ACEITE GIRASOL 1L",
+categoria:"Víveres",
+precio:3.34,
+imagen:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDnexpx0C7_rxIffJSkiSokDXoGbcvG4FQpg&s"
+},
+
+{
+id:13,
+nombre:"COMINO EN POLVO",
+categoria:"Víveres",
+precio:1.00,
+imagen:"https://www.elsabor.com.ec/wp-content/uploads/2021/12/COMINO-MOLIDO-50G-600x600.png"
+},
+
+{
+id:14,
+nombre:"PIMIENTA MOLIDA",
+categoria:"Víveres",
+precio:1.70,
+imagen:"https://www.elsabor.com.ec/wp-content/uploads/2021/12/PIMIENTA-PICANTE-MOLIDA-50G-600x600.png"
+},
+
+{
+id:15,
+nombre:"OREGANO MOLIDO",
+categoria:"Víveres",
+precio:1.70,
+imagen:"https://productoslacena.com.ec/wp-content/uploads/2020/09/OREGANO-MOLIDO.jpeg"
+},
+
+{
+id:16,
+nombre:"OREGANO MOLIDO",
+categoria:"Víveres",
+precio:1.70,
+imagen:"https://productoslacena.com.ec/wp-content/uploads/2020/09/OREGANO-MOLIDO.jpeg"
+},
+
+{
+id:17,
+nombre:"CAFE MINERVA",
+categoria:"Víveres",
+precio:5.00,
+imagen:"https://santamaria.vtexassets.com/arquivos/ids/162686/27366_G.jpg?v=638974573137800000"
+},
+
+{
+id:18,
+nombre:"PASTA DE ACHIOTE",
+categoria:"Víveres",
+precio:2.02,
+imagen:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVDrLm45RGNatoM2l5cTaWswmBR9G8Ky68Uw&s"
+},
+
+{
+id:19,
+nombre:"APANADURA",
+categoria:"Víveres",
+precio:2.63,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2024/08/7861009910300-1-8.png"
+},
+
+{
+id:20,
+nombre:"GELATINA DE FRAMBUESA",
+categoria:"Víveres",
+precio:3.29,
+imagen:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_7jkJjt8mIVwI-wA1zYpfhVHbEhfZg2FCiA&s"
+},
+
+{
+id:21,
+nombre:"GELATINA DE FRESA",
+categoria:"Víveres",
+precio:2.98,
+imagen:"https://www.levapan.com.ec/wp-content/uploads/2018/01/Gelatina-Gelhada-sabor-fresa-400g.jpg"
+},
+
+{
+id:22,
+nombre:"COCOA",
+categoria:"Víveres",
+precio:4.35,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2025/07/7862122703664-1-13.png"
+},
+
+{
+id:23,
+nombre:"SAL 2KG",
+categoria:"Víveres",
+precio:1.00,
+imagen:"https://santamaria.vtexassets.com/arquivos/ids/163613/31187_G.jpg?v=638974574592970000"
+},
+
+{
+id:24,
+nombre:"AZUCAR 1KG",
+categoria:"Víveres",
+precio:2.00,
+imagen:"https://mercadomi.com.ec/wp-content/uploads/2024/11/La-troncal-azucar-1kg.jpg"
+},
+
+{
+id:25,
+nombre:"FREJOL 1L",
+categoria:"Víveres",
+precio:1.89,
+imagen:"https://www.elsabor.com.ec/wp-content/uploads/2021/12/FREJOL-CANARIO-EL-SABOR-FUNDA-490-scaled.jpg"
+},
+
+{
+id:26,
+nombre:"CARTERA PARA DAMA GUESS LP",
+categoria:"Ropa",
+precio:34.00,
+stock:1,
+imagen:"https://http2.mlstatic.com/D_NQ_NP_775807-MLM107417143149_022026-O.webp"
+},
+
+{
+id:27,
+nombre:"CARTERA PARA DAMA GUESS LR",
+categoria:"Ropa",
+precio:34.00,
+stock:1,
+imagen:"https://http2.mlstatic.com/D_NQ_NP_637692-MLA106955216342_022026-O.webp"
+},
+
+{
+id:28,
+nombre:"CARTERA PARA DAMA GUESS LB",
+categoria:"Ropa",
+precio:34.00,
+stock:1,
+imagen:"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRy1HIrbsgzvSxfcTk2-1hR5UzanhI0PZXKyJrAPfbZVGYuJ4EE"
+},
+
+{
+id:29,
+nombre:"CARTERA PARA DAMA GUESS CREMA",
+categoria:"Ropa",
+precio:34.00,
+stock:1,
+imagen:"https://assets.central.co.th/file-assets/CDSPIM/web/Image/MKP1093/GUESS-BAGCB327451CADENCESLGSLIMCLUTCHBROWN-MKP1093183763-2.webp"
+},
+
+{
+id:30,
+nombre:"CARTERA PARA DAMA TOMMY AZUL",
+categoria:"Ropa",
+precio:34.00,
+stock:1,
+imagen:"https://media.gotrendier.mx/media/p/2025/07/19/i_ofnuy0evu2ij9d.30f0d49ecebef6ec.jpeg"
+},
+
+{
+id:31,
+nombre:"CARTERA PARA DAMA TOMMY ROSA",
+categoria:"Ropa",
+precio:34.00,
+stock:1,
+imagen:"https://http2.mlstatic.com/D_NQ_NP_861875-MLB89863993155_082025-O.webp"
+},
+
+{
+id:32,
+nombre:"CARTERA PARA DAMA TOMMY AZUL CON BLANCO	",
+categoria:"Ropa",
+precio:34.00,
+stock:1,
+imagen:"https://marvelous.com.pe/wp-content/uploads/f7807494-21e8-4d98-8eee-53b2238b3dac.jpg"
+},
+
+{
+id:33,
+nombre:"TARJETERO STEVE MADDEN NEGRO",
+categoria:"Ropa",
+precio:22.10,
+stock:1,
+imagen:"https://http2.mlstatic.com/D_NQ_NP_698570-MLV80174419946_112024-O.webp"
+},
+
+{
+id:34,
+nombre:"TARJETERO STEVE MADDEN CAFE",
+categoria:"Ropa",
+precio:22.10,
+stock:1,
+imagen:"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRcCaOqIEMNVbwfy9n_ug9ulMaZkoPOm2MRPsjKN8oKatd6K2dh"
+},
+
+{
+id:35,
+nombre:"TARJETERO STEVE MADDEN CREMA",
+categoria:"Ropa",
+precio:17.00,
+stock:1,
+imagen:"https://http2.mlstatic.com/D_NQ_NP_904629-MLM110527365821_042026-O.webp"
+},
+
+{
+id:36,
+nombre:"BILLETERA TOMMY NEGRA",
+categoria:"Ropa",
+precio:34.00,
+stock:1,
+imagen:"https://i.ebayimg.com/images/g/AgMAAeSwsh5oasJP/s-l1200.webp"
+},
+
+{
+id:37,
+nombre:"BILLETERA MICHAEL KORS CAFE",
+categoria:"Ropa",
+precio:35.00,
+stock:2,
+imagen:"https://http2.mlstatic.com/D_NQ_NP_920702-MLA93966663313_102025-O.webp"
+},
+
+{
+id:38,
+nombre:"BILLETERA CALVIN KLEIN NEGRA 1",
+categoria:"Ropa",
+precio:34.00,
+stock:1,
+imagen:"https://i.ebayimg.com/images/g/KLcAAOSwZxNlKz7U/s-l400.jpg"
+},
+
+{
+id:39,
+nombre:"BILLETERA CALVIN KLEIN NEGRA 2",
+categoria:"Ropa",
+precio:34.00,
+stock:1,
+imagen:"https://http2.mlstatic.com/D_NQ_NP_937048-MLM108589802099_032026-O.webp"
+},
+
+{
+id:40,
+nombre:"CAMISA ECUADOR DE MUJER TALLA M",
+categoria:"Ropa",
+precio:27.90,
+stock:2,
+imagen:"https://m.media-amazon.com/images/I/71sevzXYlWL._AC_UY1000_.jpg"
+},
+
+{
+id:41,
+nombre:"CAMISA ECUADOR DE MUJER TALLA S",
+categoria:"Ropa",
+precio:27.90,
+stock:1,
+imagen:"https://m.media-amazon.com/images/I/71sevzXYlWL._AC_UY1000_.jpg"
+},
+
+{
+id:41,
+nombre:"LAVADORA WHIRLPOOL 42LBS 19KB NEGRO",
+categoria:"Electrodomésticos",
+precio:500,
+stock:5,
+imagen:"https://promartecuador.vtexassets.com/arquivos/ids/265025-1600-1600?v=639100713831100000&width=1600&height=1600&aspect=true"
+},
+
+{
+id:41,
+nombre:"LAPTOP ASUS RYZEN 5 512 GB",
+categoria:"Electrodomésticos",
+precio:620,
+stock:5,
+imagen:"https://japon.vtexassets.com/arquivos/ids/181033-800-auto?v=638823316150170000&width=800&height=auto&aspect=true"
+},
+
+{
+id:42,
+nombre:"COCINA INDURAMA 60 GALICIA ZAFIRO GRILL",
+categoria:"Electrodomésticos",
+precio:528,
+stock:5,
+imagen:"https://mundotek.com.ec/wp-content/uploads/2022/04/GALICIA-ZAFIRO.png"
+},
+
+{
+id:43,
+nombre:"BRASIER CELESTE 36B",
+categoria:"Ropa",
+precio:22,
+stock:1,
+imagen:"https://m.media-amazon.com/images/I/51tciuUZEsL._AC_SY606_.jpg"
+},
+
+{
+id:44,
+nombre:"BRASIER CREMA SIN BARILLA 36B",
+categoria:"Ropa",
+precio:25,
+stock:1,
+imagen:"https://http2.mlstatic.com/D_NQ_NP_757817-CBT110060778544_042026-O.webp"
+},
+
+{
+id:45,
+nombre:"BRASIER BLANCO 1 36B",
+categoria:"Ropa",
+precio:12,
+stock:1,
+imagen:"https://lilipinkco.vtexassets.com/arquivos/ids/490453-800-auto?v=639138510072000000&width=800&height=auto&aspect=true"
+},
+
+{
+id:46,
+nombre:"BRASIER BLANCO 2 36B",
+categoria:"Ropa",
+precio:12,
+stock:1,
+imagen:"https://lilipinkco.vtexassets.com/arquivos/ids/483492-800-auto?v=639113653820900000&width=800&height=auto&aspect=true"
+},
+
+{
+id:47,
+nombre:"BRASIER DORADO 36B",
+categoria:"Ropa",
+precio:22,
+stock:1,
+imagen:"https://womensecret.com/on/demandware.static/-/Sites-gc-ws-master-catalog/default/dwe5592153/images/hi-res/P_505394496D1.jpg"
+},
+
+{
+id:48,
+nombre:"BRASIER ROSADO SIN BARILLA DEPORTIVO 36B",
+categoria:"Ropa",
+precio:25,
+stock:1,
+imagen:"https://lilipinkco.vtexassets.com/arquivos/ids/490748-800-auto?v=639138523033700000&width=800&height=auto&aspect=true"
+},
+
+{
+id:49,
+nombre:"BRASIER ROSADO 36B",
+categoria:"Ropa",
+precio:22.90,
+stock:1,
+imagen:"https://womensecret.com/on/demandware.static/-/Sites-gc-ws-master-catalog/default/dwa6fe1de6/images/hi-res/P_505226770FM.jpg"
+},
+
+{
+id:50,
+nombre:"CONJUNTO ROSADO DE 3 UNIDADES EN MICROFIBRA CON ENCAJE",
+categoria:"Ropa",
+precio:23,
+stock:1,
+imagen:"https://lilipinkco.vtexassets.com/arquivos/ids/447301-800-auto?v=638997558794500000&width=800&height=auto&aspect=true"
+},
+
+{
+id:51,
+nombre:"CONJUNTO NEGRO DE 3 UNIDADES EN MICROFIBRA CON ENCAJE",
+categoria:"Ropa",
+precio:23,
+stock:1,
+imagen:"https://lilipinkco.vtexassets.com/arquivos/ids/447383-800-auto?v=638997558799500000&width=800&height=auto&aspect=true"
+},
+
+{
+id:52,
+nombre:"CONJUNTO BLANCO DE 3 UNIDADES EN MICROFIBRA CON ENCAJE",
+categoria:"Ropa",
+precio:23,
+stock:1,
+imagen:"https://lilipinkco.vtexassets.com/arquivos/ids/447343-800-auto?v=638997558797130000&width=800&height=auto&aspect=true"
+},
+
+{
+id:53,
+nombre:"TRAJE DE BAÑO ENTERIZO DETALLES ROSADOS 38B/XL",
+categoria:"Ropa",
+precio:20,
+stock:1,
+imagen:"https://www.mytheresa.com/image/1094/1238/100/da/P01110690_b1.jpg"
+},
+
+{
+id:54,
+nombre:"TRAJE DE BAÑO ENTERIZO METALICO 36B/L",
+categoria:"Ropa",
+precio:22,
+stock:1,
+imagen:"https://img.kwcdn.com/product/fancy/e07ca2b3-da67-4067-af23-c8638f11dc3c.jpg?imageMogr2/auto-orient|imageView2/2/w/800/q/70/format/webp"
+},
+
+
+{
+id:56,
+nombre:"SALIDA DE BAÑO CAFÉ M SOLO FALDA",
+categoria:"Ropa",
+precio:12,
+stock:1,
+imagen:"https://scontent.fuio1-2.fna.fbcdn.net/v/t39.30808-6/469317380_18048826484296814_5096932783518112533_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=zhSiWlGKaKsQ7kNvwGSUeLE&_nc_oc=AdqhP5IGLpTrwjMuHtUfVhdtK13uFH_czbqSkeSk2Q7D6Ye5EOxjUOk_orRdUnb6ZxY&_nc_zt=23&_nc_ht=scontent.fuio1-2.fna&_nc_gid=xw3zC4c8kRsPfAFyOgw1NQ&_nc_ss=7b289&oh=00_Af-y7fXbDFfigOT4uFxD58DTSjtUr5RM2kX4eTY0U01WgQ&oe=6A28DFBA"
+},
+
+{
+id:57,
+nombre:"SALIDA DE BAÑO ROSADO L	",
+categoria:"Ropa",
+precio:12,
+stock:1,
+imagen:"https://images-na.ssl-images-amazon.com/images/I/61kXsWP7cSL._AC_UL600_SR600,600_.jpg"
+},
+
+{
+id:58,
+nombre:"CEPILLO DE AIRE CALIENTE Y PEINE PARA PEINAR EL CABELLO 5 EN 1",
+categoria:"Electrodomésticos",
+precio:60,
+stock:1,
+imagen:"https://vinniesonline.com.au/cdn/shop/files/D2261856_5.jpg?v=1764209727"
+},
+
+{
+id:59,
+nombre:"VINO TINTO BORDEAUX MERLOT MAISON CASTEL",
+categoria:"Víveres",
+precio:13.31,
+stock:1,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2025/05/3211201046613-1-15.png"
+},
+
+{
+id:60,
+nombre:"VINO BLANCO SEMIDULCE BLUE HEAVEN",
+categoria:"Víveres",
+precio:7.45,
+stock:1,
+imagen:"https://pub-0c43255e05a04f3887e7c78af0259968.r2.dev/2025/10/4008005046173-1-27.png"
+},
+
+{
+id:61,
+nombre:"BUCHANAN'S PINEAPPLE",
+categoria:"Víveres",
+precio:59.95,
+stock:1,
+imagen:"https://pub-0c43255e05a04f3887e7c78af0259968.r2.dev/2025/11/5000196007246-4.png"
+},
+
+{
+id:62,
+nombre:"RED LABEL JOHNNIE WALKER",
+categoria:"Víveres",
+precio:25.17,
+stock:1,
+imagen:"https://pub-0c43255e05a04f3887e7c78af0259968.r2.dev/2024/08/5000267013602-1.png"
+},
+
+{
+id:61,
+nombre:"VINO ANTHONY",
+categoria:"Víveres",
+precio:8.83,
+stock:1,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2024/12/7861058287071-1-17.png"
+},
+
+{
+id:62,
+nombre:"CERVEZA CORONA LATA EXTRA SIX PACK PRECIO POR UNIDAD",
+categoria:"Víveres",
+precio:1.32,
+imagen:"https://exitocol.vtexassets.com/arquivos/ids/33440207/Corona-Lata-sixpack-473-CORONA-Corona-Lata-Sixpack-473-2838-ml-3750928_a.jpg?v=639147913446630000"
+},
+
+{
+id:63,
+nombre:"CERVEZA HEINEKEN LAGER PACK DE 12 LATAS",
+categoria:"Víveres",
+precio:8.68,
+imagen:"https://www.cervezas.store/24-large_default/-cerveza-heineken-lager-pack-de-12-latas-de-33-cl-.jpg"
+},
+
+{
+id:64,
+nombre:"QUINUA 1L",
+categoria:"Víveres",
+precio:2.80,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2024/08/7861042500223-1.png"
+},
+
+{
+id:65,
+nombre:"SALSA CHINA",
+categoria:"Víveres",
+precio:1.75,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2025/07/7861007900082-1.png"
+},
+
+{
+id:66,
+nombre:"SALSA DE TOMATE",
+categoria:"Víveres",
+precio:1.25,
+imagen:"https://pub-0c43255e05a04f3887e7c78af0259968.r2.dev/2026/05/7861223819229-1-1.png"
+},
+
+{
+id:67,
+nombre:"MAYONESA",
+categoria:"Víveres",
+precio:1.71,
+imagen:"https://pub-0c43255e05a04f3887e7c78af0259968.r2.dev/2026/05/7861223827002-1-1.png"
+},
+
+{
+id:68,
+nombre:"PAQUETE DE RANCHERO X 20",
+categoria:"Víveres",
+precio:1.93,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2025/08/7861210701520-1-16.jpg"
+},
+
+{
+id:69,
+nombre:"SPAGUETTI",
+categoria:"Víveres",
+precio:1,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2026/03/7861026033037-1.jpg"
+},
+
+{
+id:70,
+nombre:"MIAZ SABROSA",
+categoria:"Víveres",
+precio:3.05,
+imagen:"https://shop.ecuaworldla.com/cache/original/product/132/8AAoPSNOkrrPbbclDh4TaMCx90hVbLxTo98vC9D5.jpg"
+},
+
+{
+id:71,
+nombre:"VINAGRE",
+categoria:"Víveres",
+precio:3.15,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2025/08/7861042576273-1-9.jpg"
+},
+
+{
+id:72,
+nombre:"CANGUIL ARTESANAL",
+categoria:"Víveres",
+precio:1,
+imagen:"https://pub-0c43255e05a04f3887e7c78af0259968.r2.dev/2025/12/7861223838725-1-17.png"
+},
+
+{
+id:73,
+nombre:"FREJOL PALMITO",
+categoria:"Víveres",
+precio:1.34,
+imagen:"https://www.elsabor.com.ec/wp-content/uploads/2021/12/FREJOL-PANAMITO-EL-SABOR-FUNDA-500-scaled.jpg"
+},
+
+{
+id:74,
+nombre:"CRIOLLITA MAGGIE X8",
+categoria:"Víveres",
+precio:1.34,
+imagen:"https://pub-0c43255e05a04f3887e7c78af0259968.r2.dev/2025/09/7861001231984-1-3.png"
+},
+
+{
+id:75,
+nombre:"HARINA 2KG",
+categoria:"Víveres",
+precio:1.55,
+imagen:"https://pub-0c43255e05a04f3887e7c78af0259968.r2.dev/2026/05/7861042530879-1.png"
+},
+
+{
+id:76,
+nombre:"TORTA DE CHOCOLATE",
+categoria:"Víveres",
+precio:2.62,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2026/03/7861042595953-1.png"
+},
+
+{
+id:77,
+nombre:"ACEITE VIVI GIRASOL",
+categoria:"Víveres",
+precio:7.79,
+imagen:"https://pub-0c43255e05a04f3887e7c78af0259968.r2.dev/2024/12/7861048610094-1-29.png"
+},
+
+{
+id:78,
+nombre:"LA SAZON",
+categoria:"Víveres",
+precio:2,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2024/08/7861042578178-1-11.jpg"
+},
+
+{
+id:79,
+nombre:"ESCENCIA DE VAINILLA",
+categoria:"Víveres",
+precio:2.42,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2024/12/7861007800757-1-8.jpg"
+},
+
+{
+id:80,
+nombre:"PASTA DE AJO",
+categoria:"Víveres",
+precio:1.38,
+imagen:"https://www.elsabor.com.ec/wp-content/uploads/2021/12/PASTA-DE-AJO-335G.png"
+},
+
+{
+id:81,
+nombre:"MOSTAZA",
+categoria:"Víveres",
+precio:1.40,
+imagen:"https://pub-0c43255e05a04f3887e7c78af0259968.r2.dev/2024/08/7861001236101-1-18.png"
+},
+
+{
+id:82,
+nombre:"ARROZ 5KG",
+categoria:"Víveres",
+precio:8.74,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2025/07/7862108750118-1-11.jpg"
+},
+
+{
+id:83,
+nombre:"DURAZNO EN ALMIBAR",
+categoria:"Víveres",
+precio:3.49,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2025/06/7801800100012-1-15.jpg"
+},
+
+{
+id:84,
+nombre:"LECHE EN CARTON PARMALAT",
+categoria:"Víveres",
+precio:2.18,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2026/04/7861106413834-1-7.png"
+},
+
+{
+id:85,
+nombre:"PAPEL ELITE X 4 ",
+categoria:"Víveres",
+precio:3.96,
+imagen:"https://supermaxi-225de.kxcdn.com/wp-content/uploads/2024/12/7861175504235-1-19.jpg"
+},
+
+
+
+];
+
+let carrito=
+JSON.parse(localStorage.getItem("carrito"))||[];
+
+const productContainer=
+document.getElementById("productos");
+
+function renderProducts(lista){
+
+productContainer.innerHTML="";
+
+lista.forEach(producto=>{
+
+productContainer.innerHTML+=`
+
+<div class="col-md-4 mb-4">
+
+<div class="card card-product">
+
+<img src="${producto.imagen}"
+class="card-img-top product-img">
+
+<div class="card-body">
+
+<h5>${producto.nombre}</h5>
+
+<p>${producto.categoria}</p>
+
+<p class="text-primary fw-bold">
+Stock disponible: ${producto.stock}
+</p>
+
+<h4>$${producto.precio}</h4>
+
+<button
+class="btn btn-success w-100"
+onclick="addToCart(${producto.id})">
+
+Agregar al carrito
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+renderProducts(productos);
+
+function addToCart(id){
+
+const prod=
+productos.find(p=>p.id===id);
+
+const existe=
+carrito.find(p=>p.id===id);
+
+if(existe){
+existe.cantidad++;
+}else{
+carrito.push({...prod,cantidad:1});
+}
+
+saveCart();
+
+}
+
+function saveCart(){
+
+localStorage.setItem(
+"carrito",
+JSON.stringify(carrito)
+);
+
+renderCart();
+
+}
+
+function renderCart(){
+
+const div=
+document.getElementById("cartItems");
+
+div.innerHTML="";
+
+let total=0;
+
+carrito.forEach((item,index)=>{
+
+let subtotal=
+item.precio*item.cantidad;
+
+total+=subtotal;
+
+div.innerHTML+=`
+
+<div class="card mb-2 p-3">
+
+<b>${item.nombre}</b>
+
+Cantidad:
+${item.cantidad}
+
+Subtotal:
+$${subtotal.toFixed(2)}
+
+<button
+class="btn btn-danger btn-sm mt-2"
+onclick="removeItem(${index})">
+
+Eliminar
+
+</button>
+
+</div>
+
+`;
+
+});
+
+document.getElementById("total")
+.innerText=total.toFixed(2);
+
+document.getElementById("cartCount")
+.innerText=carrito.length;
+
+}
+
+function removeItem(index){
+
+carrito.splice(index,1);
+
+saveCart();
+
+}
+
+renderCart();
+
+document.getElementById("search")
+.addEventListener("input",filtrar);
+
+document.getElementById("filter")
+.addEventListener("change",filtrar);
+
+function filtrar(){
+
+let texto=
+document.getElementById("search")
+.value.toLowerCase();
+
+let categoria=
+document.getElementById("filter")
+.value;
+
+let resultado=
+productos.filter(p=>{
+
+let coincideTexto=
+p.nombre.toLowerCase().includes(texto);
+
+let coincideCategoria=
+categoria==="todos" ||
+p.categoria===categoria;
+
+return coincideTexto &&
+coincideCategoria;
+
+});
+
+renderProducts(resultado);
+
+}
+
+const nombre=
+document.getElementById("nombre");
+
+const cedula=
+document.getElementById("cedula");
+
+const boton=
+document.getElementById("btnWhatsapp");
+
+function validar(){
+
+boton.disabled=
+!(nombre.value.trim() &&
+cedula.value.trim());
+
+}
+
+nombre.addEventListener("input",validar);
+cedula.addEventListener("input",validar);
+
+boton.addEventListener("click",()=>{
+
+let mensaje=
+`Nombre: ${nombre.value}%0A`+
+`Cédula: ${cedula.value}%0A%0APedido:%0A`;
+
+let total=0;
+
+carrito.forEach(item=>{
+
+let sub=
+item.precio*item.cantidad;
+
+total+=sub;
+
+mensaje+=
+`${item.nombre} x${item.cantidad} = $${sub.toFixed(2)}%0A`;
+
+});
+
+mensaje+=
+`%0ATOTAL: $${total.toFixed(2)}`;
+
+window.open(
+`https://wa.me/593968465397?text=${mensaje}`,
+"_blank"
+);
+
+});
+
+
+</script>
+
+</body>
+</html>
